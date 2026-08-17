@@ -26,6 +26,8 @@ Credit aplikasi full to [Gozargah Marzban](https://github.com/Gozargah), saya ha
 - Debian 11 </br>
 - Debian 12 [**RECOMMENDED**] </br>
 - Ubuntu 20.04 </br>
+- Ubuntu 22.04 </br>
+- Ubuntu 24.04 [**SUPPORTED**] </br>
 
 # Instalasi
   ```html

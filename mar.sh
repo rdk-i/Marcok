@@ -28,24 +28,31 @@ if [ "$(id -u)" != "0" ]; then
     exit 1
 fi
 
-# Check supported operating system
+# Check supported operating system before changing packages
 supported_os=false
+os_name=""
+os_version=""
 
-if [ -f /etc/os-release ]; then
-    os_name=$(grep -E '^ID=' /etc/os-release | cut -d= -f2)
-    os_version=$(grep -E '^VERSION_ID=' /etc/os-release | cut -d= -f2 | tr -d '"')
+if [ -r /etc/os-release ]; then
+    . /etc/os-release
+    os_name="${ID:-}"
+    os_version="${VERSION_ID:-}"
 
- if [ "$os_name" == "debian" ] && ([ "$os_version" == "11" ] || [ "$os_version" == "12" ]); then
-    supported_os=true
-    elif [ "$os_name" == "ubuntu" ] && [ "$os_version" == "20.04" ]; then
+    if [ "$os_name" = "debian" ] && [[ "$os_version" =~ ^(11|12)$ ]]; then
+        supported_os=true
+    elif [ "$os_name" = "ubuntu" ] && [[ "$os_version" =~ ^(20\.04|22\.04|24\.04)$ ]]; then
         supported_os=true
     fi
 fi
-apt install sudo curl -y
+
 if [ "$supported_os" != true ]; then
-    colorized_echo red "Error: Skrip ini hanya support di Debian 11/12 dan Ubuntu 20.04. Mohon gunakan OS yang di support."
+    colorized_echo red "Error: Skrip ini hanya support di Debian 11/12 dan Ubuntu 20.04/22.04/24.04. OS terdeteksi: ${os_name:-unknown} ${os_version:-unknown}"
     exit 1
 fi
+
+export DEBIAN_FRONTEND=noninteractive
+apt-get update
+apt-get install -y sudo curl ca-certificates
 
 mkdir -p /etc/data
 
@@ -114,7 +121,7 @@ net.ipv6.conf.lo.disable_ipv6 = 1' >> /etc/sysctl.conf
 sysctl -p;
 
 #install toolkit
-apt-get install libio-socket-inet6-perl libsocket6-perl libcrypt-ssleay-perl libnet-libidn-perl perl libio-socket-ssl-perl libwww-perl libpcre3 libpcre3-dev zlib1g-dev dbus iftop zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr dnsutils sudo at htop iptables bsdmainutils cron lsof lnav -y
+apt-get install -y libio-socket-inet6-perl libsocket6-perl libcrypt-ssleay-perl libnet-libidn-perl perl libio-socket-ssl-perl libwww-perl libpcre3 libpcre3-dev zlib1g-dev dbus iftop zip unzip wget net-tools curl nano sed screen gnupg bc build-essential dirmngr dnsutils sudo at htop iptables bsdmainutils cron lsof lnav
 
 #Set Timezone GMT+7
 timedatectl set-timezone Asia/Jakarta;
@@ -136,27 +143,30 @@ cd
 echo -e 'profile' >> /root/.profile
 wget -O /usr/bin/profile "https://raw.githubusercontent.com/GawrAme/MarLing/main/profile";
 chmod +x /usr/bin/profile
-apt install neofetch -y
+# neofetch is unavailable in some Ubuntu 24.04 mirrors; use fastfetch or a no-op fallback.
+if apt-cache show neofetch >/dev/null 2>&1; then
+    apt-get install -y neofetch
+elif apt-cache show fastfetch >/dev/null 2>&1; then
+    apt-get install -y fastfetch
+    ln -sf /usr/bin/fastfetch /usr/local/bin/neofetch
+else
+    printf '#!/bin/sh\nexit 0\n' > /usr/local/bin/neofetch
+    chmod 755 /usr/local/bin/neofetch
+fi
 wget -O /usr/bin/cekservice "https://raw.githubusercontent.com/GawrAme/MarLing/main/cekservice.sh"
 chmod +x /usr/bin/cekservice
 
 #install compose
 wget -O /opt/marzban/docker-compose.yml "https://raw.githubusercontent.com/GawrAme/MarLing/main/docker-compose.yml"
 
-#Install VNSTAT
-apt -y install vnstat
-/etc/init.d/vnstat restart
-apt -y install libsqlite3-dev
-wget https://github.com/GawrAme/MarLing/raw/main/vnstat-2.6.tar.gz
-tar zxvf vnstat-2.6.tar.gz
-cd vnstat-2.6
-./configure --prefix=/usr --sysconfdir=/etc && make && make install 
-cd
-chown vnstat:vnstat /var/lib/vnstat -R
-systemctl enable vnstat
-/etc/init.d/vnstat restart
-rm -f /root/vnstat-2.6.tar.gz 
-rm -rf /root/vnstat-2.6
+# Install the distro vnstat package. Building the legacy 2.6 tarball breaks on
+# newer Ubuntu toolchains and is unnecessary because Ubuntu 24.04 ships vnstat.
+apt-get install -y vnstat
+mkdir -p /var/lib/vnstat
+if id vnstat >/dev/null 2>&1; then
+    chown -R vnstat:vnstat /var/lib/vnstat
+fi
+systemctl enable --now vnstat
 
 #Install Speedtest
 curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | sudo bash
@@ -174,7 +184,7 @@ echo "<pre>Setup by AutoScript LingVPN</pre>" > /var/www/html/index.html
 
 #install socat
 apt install iptables -y
-apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
+apt-get install -y curl socat xz-utils wget gnupg gnupg2 dnsutils lsb-release
 apt install socat cron bash-completion -y
 
 #install cert
