@@ -35,7 +35,7 @@ Credit aplikasi full to [Gozargah Marzban](https://github.com/Gozargah), saya ha
  ```
 Pastikan anda sudah login sebagai root sebelum menjalankan perintah dibawah
  ```html
- wget https://raw.githubusercontent.com/rdk-i/Marcok/main/mar.sh && chmod +x mar.sh && ./mar.sh
+ wget -O mar.sh https://raw.githubusercontent.com/rdk-i/Marcok/main/mar.sh && chmod +x mar.sh && ./mar.sh
  ```
 
 Buka panel Marzban dengan mengunjungi https://domainmu/dashboard <br>
