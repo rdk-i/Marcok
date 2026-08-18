@@ -180,7 +180,7 @@ wget -O /opt/marzban/nginx.conf "https://raw.githubusercontent.com/GawrAme/MarLi
 wget -O /opt/marzban/default.conf "https://raw.githubusercontent.com/GawrAme/MarLing/main/vps.conf"
 wget -O /opt/marzban/xray.conf "https://raw.githubusercontent.com/GawrAme/MarLing/main/xray.conf"
 mkdir -p /var/www/html
-echo "<pre>Setup by AutoScript LingVPN</pre>" > /var/www/html/index.html
+wget -qO /var/www/html/index.html "https://raw.githubusercontent.com/rdk-i/Marcok/main/landing.html"
 
 #install socat
 apt install iptables -y
