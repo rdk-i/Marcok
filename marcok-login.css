@@ -1,0 +1,90 @@
+/* Marcok visual layer for the native Marzban login route. */
+body:has(input[name="username"]) {
+  background:#070b12 !important;
+  color:#edf7ff !important;
+  overflow:hidden;
+}
+body:has(input[name="username"])::before {
+  content:"";
+  position:fixed;
+  inset:-12%;
+  pointer-events:none;
+  z-index:0;
+  opacity:.3;
+  background-image:linear-gradient(rgba(71,215,255,.15) 1px,transparent 1px),linear-gradient(90deg,rgba(71,215,255,.15) 1px,transparent 1px);
+  background-size:72px 72px;
+  mask-image:radial-gradient(ellipse 70% 68% at 50% 38%,black 0%,rgba(0,0,0,.8) 34%,transparent 76%);
+  -webkit-mask-image:radial-gradient(ellipse 70% 68% at 50% 38%,black 0%,rgba(0,0,0,.8) 34%,transparent 76%);
+}
+body:has(input[name="username"])::after {
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background:radial-gradient(circle at 67% 31%,rgba(71,215,255,.12),transparent 25%),linear-gradient(115deg,transparent 35%,rgba(7,11,18,.78) 77%);
+}
+body:has(input[name="username"]) #root {
+  position:relative;
+  z-index:1;
+  min-height:100vh;
+}
+body:has(input[name="username"]) #root::before {
+  content:"Marcok";
+  position:fixed;
+  top:10vh;
+  left:8vw;
+  color:#edf7ff;
+  font:800 clamp(52px,9vw,112px)/.85 Inter,ui-sans-serif,system-ui,sans-serif;
+  letter-spacing:-.09em;
+  background:linear-gradient(105deg,#fff 8%,#c7f2ff 55%,#718aff 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  pointer-events:none;
+}
+body:has(input[name="username"]) #root::after {
+  content:"Minimal surface. Maximum control.";
+  position:fixed;
+  top:calc(10vh + clamp(58px,10vw,118px));
+  left:8.3vw;
+  color:#a7bdcd;
+  font:400 clamp(16px,2vw,22px)/1.35 Inter,ui-sans-serif,system-ui,sans-serif;
+  letter-spacing:-.03em;
+  pointer-events:none;
+}
+body:has(input[name="username"]) form {
+  width:min(92vw,390px) !important;
+  margin:0 auto !important;
+  padding:34px !important;
+  background:rgba(13,21,33,.88) !important;
+  border:1px solid #1c3144 !important;
+  border-radius:2px !important;
+  box-shadow:0 24px 80px rgba(0,0,0,.3) !important;
+  backdrop-filter:blur(12px);
+}
+body:has(input[name="username"]) input {
+  color:#edf7ff !important;
+  background:#09111b !important;
+  border:1px solid #294257 !important;
+  border-radius:2px !important;
+}
+body:has(input[name="username"]) input:focus {
+  border-color:#47d7ff !important;
+  box-shadow:0 0 0 1px #47d7ff !important;
+}
+body:has(input[name="username"]) button[type="submit"] {
+  color:#03121b !important;
+  background:#47d7ff !important;
+  border:1px solid #47d7ff !important;
+  border-radius:2px !important;
+  font-weight:700 !important;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+body:has(input[name="username"]) button[type="submit"]:hover { background:#8be7ff !important; }
+@media (max-width:700px) {
+  body:has(input[name="username"]) #root::before { top:7vh; left:8vw; font-size:18vw; }
+  body:has(input[name="username"]) #root::after { top:calc(7vh + 20vw); left:8.5vw; font-size:17px; }
+  body:has(input[name="username"]) form { padding:26px !important; }
+}
