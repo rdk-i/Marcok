@@ -181,6 +181,8 @@ wget -O /opt/marzban/default.conf "https://raw.githubusercontent.com/GawrAme/Mar
 wget -O /opt/marzban/xray.conf "https://raw.githubusercontent.com/GawrAme/MarLing/main/xray.conf"
 mkdir -p /var/www/html
 wget -qO /var/www/html/index.html "https://raw.githubusercontent.com/rdk-i/Marcok/main/landing.html"
+wget -qO /var/www/html/marcok-login.css "https://raw.githubusercontent.com/rdk-i/Marcok/main/marcok-login.css"
+chmod 644 /var/www/html/index.html /var/www/html/marcok-login.css
 
 #install socat
 apt install iptables -y
